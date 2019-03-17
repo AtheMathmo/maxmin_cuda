@@ -4,11 +4,11 @@
 
 // CUDA forward declarations
 
-std::vector<at::Tensor> maxmin_cuda_forward(
+at::Tensor maxmin_cuda_forward(
     at::Tensor input,
     int32_t axis);
 
-std::vector<at::Tensor> maxmin_cuda_backward(
+at::Tensor maxmin_cuda_backward(
     at::Tensor input,
     at::Tensor grad,
     int32_t axis);
@@ -19,14 +19,14 @@ std::vector<at::Tensor> maxmin_cuda_backward(
 #define CHECK_CONTIGUOUS(x) AT_ASSERTM(x.is_contiguous(), #x " must be contiguous")
 #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
 
-std::vector<at::Tensor> maxmin_forward(
+at::Tensor maxmin_forward(
     at::Tensor input,
     int32_t axis) {
   CHECK_INPUT(input);
   return maxmin_cuda_forward(input, axis);
 }
 
-std::vector<at::Tensor> maxmin_backward(
+at::Tensor maxmin_backward(
     at::Tensor input,
     at::Tensor grad,
     int32_t axis) {

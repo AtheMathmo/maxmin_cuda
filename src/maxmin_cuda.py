@@ -1,15 +1,15 @@
 import torch
-import maxmin
+import maxmin_cuda
 
 class MaxMinFunction(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, input):
-        outputs = maxmin.forward(input)
+    def forward(ctx, input, axis):
+        outputs = maxmin_cuda.forward(input, axis)
         return outputs
 
     @staticmethod
     def backward(ctx, grad_h):
-        return None
+        return grad_h, None
 
 class MaxMin(torch.nn.Module):
     def __init__(self, axis=-1):
@@ -17,4 +17,4 @@ class MaxMin(torch.nn.Module):
         self.axis = axis
 
     def forward(self, x):
-       return MaxMinFunction.apply(x)
+       return MaxMinFunction.apply(x, self.axis)

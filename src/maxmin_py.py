@@ -3,19 +3,17 @@ import torch.nn as nn
 
 class MaxMin(nn.Module):
 
-    def __init__(self, num_units, axis=-1):
+    def __init__(self, axis=-1):
         super(MaxMin, self).__init__()
-        self.num_units = num_units
         self.axis = axis
 
     def forward(self, x):
-        maxes = maxout(x, self.num_units, self.axis)
-        mins = minout(x, self.num_units, self.axis)
-        maxmin = torch.cat((maxes, mins), dim=1)
+        num_units = x.size(self.axis) // 2
+        maxes = maxout(x, num_units, self.axis)
+        mins = minout(x, num_units, self.axis)
+        
+        maxmin = torch.cat((maxes, mins), dim=self.axis)
         return maxmin
-
-    def extra_repr(self):
-        return 'num_units: {}'.format(self.num_units)
 
 
 def process_maxmin_size(x, num_units, axis=-1):
