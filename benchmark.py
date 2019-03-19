@@ -21,9 +21,9 @@ elif options.example == 'cuda':
     from src.maxmin_cuda import MaxMin
     options.cuda = True
 
-X = torch.randn(options.length)
+X = torch.randn((10, options.length // 10), requires_grad=True)
 
-maxmin = MaxMin(0)
+maxmin = MaxMin(1)
 
 if options.cuda:
     X = X.cuda()
@@ -40,7 +40,9 @@ for _ in range(options.runs):
     forward_min = min(forward_min, elapsed)
     forward_time += elapsed
 
+    loss = output.sum()
     start = time.time()
+    loss.backward()
     elapsed = time.time() - start
     backward_min = min(backward_min, elapsed)
     backward_time += elapsed

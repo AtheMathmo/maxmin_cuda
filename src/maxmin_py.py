@@ -8,12 +8,16 @@ class MaxMin(nn.Module):
         self.axis = axis
 
     def forward(self, x):
+        original_shape = x.size()
         num_units = x.size(self.axis) // 2
-        maxes = maxout(x, num_units, self.axis)
-        mins = minout(x, num_units, self.axis)
-        
-        maxmin = torch.cat((maxes, mins), dim=self.axis)
-        return maxmin
+        size = process_maxmin_size(x, num_units, self.axis)
+        sort_dim = self.axis if self.axis == -1 else self.axis + 1
+
+        mins = torch.min(x.view(*size), sort_dim, keepdim=True)[0]
+        maxes = torch.max(x.view(*size), sort_dim, keepdim=True)[0]
+
+        maxmin = torch.cat((maxes, mins), dim=sort_dim)
+        return maxmin.view(original_shape)
 
 
 def process_maxmin_size(x, num_units, axis=-1):
