@@ -102,6 +102,15 @@ class TestMaxMin(unittest.TestCase):
         py_output = py_maxmin(a)
         cuda_output = cuda_maxmin(a)
         self.assertTrue((py_output.cpu().numpy() == cuda_output.cpu().numpy()).all())
+    
+    def test_py_vs_cuda_3d_axis_1(self):
+        a = torch.randn((40, 50, 800)).cuda()
+        py_maxmin = PyMaxMin(1)
+        cuda_maxmin = CudaMaxMin(1)
+
+        py_output = py_maxmin(a)
+        cuda_output = cuda_maxmin(a)
+        self.assertTrue((py_output.cpu().numpy() == cuda_output.cpu().numpy()).all())
 
 if __name__ == '__main__':
     unittest.main()

@@ -23,7 +23,7 @@ elif options.example == 'cuda':
 
 X = torch.randn((10, options.length // 10), requires_grad=True)
 
-maxmin = MaxMin(1)
+maxmin = MaxMin(0)
 
 if options.cuda:
     X = X.cuda()
