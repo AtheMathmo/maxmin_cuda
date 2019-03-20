@@ -29,6 +29,15 @@ class TestMaxMin(unittest.TestCase):
         actual = maxmin(arr)
         self.assertTrue((expected.cpu().numpy() == actual.cpu().numpy()).all())
     
+    def test_2d_0_axis(self):
+        maxmin = CudaMaxMin(0)
+        arr = torch.Tensor([[1, 2, 4, 5],[5, 7, 3, 2]])
+        expected = torch.Tensor([[5, 7, 4, 5],[1, 2, 3, 2]])
+        arr = arr.cuda()
+        expected = expected.cuda()
+        actual = maxmin(arr)
+        self.assertTrue((expected.cpu().numpy() == actual.cpu().numpy()).all())
+    
     def test_2d_minus_axis(self):
         maxmin = CudaMaxMin(-1)
         arr = torch.Tensor([[1, 2, 4, 5],[1, 7, 3, 2]])
@@ -66,11 +75,29 @@ class TestMaxMin(unittest.TestCase):
         expected = expected.cuda()
         actual = maxmin(arr)
         self.assertTrue((expected.cpu().numpy() == actual.cpu().numpy()).all())
+    
+    def test_py_2d_0_axis(self):
+        maxmin = PyMaxMin(0)
+        arr = torch.Tensor([[1, 2, 4, 5],[5, 7, 3, 2]])
+        expected = torch.Tensor([[5, 7, 4, 5],[1, 2, 3, 2]])
+        arr = arr.cuda()
+        expected = expected.cuda()
+        actual = maxmin(arr)
+        self.assertTrue((expected.cpu().numpy() == actual.cpu().numpy()).all())
 
     def test_py_vs_cuda(self):
         a = torch.randn((10, 8000)).cuda()
         py_maxmin = PyMaxMin(1)
         cuda_maxmin = CudaMaxMin(1)
+
+        py_output = py_maxmin(a)
+        cuda_output = cuda_maxmin(a)
+        self.assertTrue((py_output.cpu().numpy() == cuda_output.cpu().numpy()).all())
+
+    def test_py_vs_cuda_axis_0(self):
+        a = torch.randn((4, 8000)).cuda()
+        py_maxmin = PyMaxMin(0)
+        cuda_maxmin = CudaMaxMin(0)
 
         py_output = py_maxmin(a)
         cuda_output = cuda_maxmin(a)
