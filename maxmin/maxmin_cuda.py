@@ -1,10 +1,10 @@
 import torch
-import maxmin_cuda
+from maxmin import maxmin_extension
 
 class MaxMinFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, input, axis):
-        outputs = maxmin_cuda.forward(input, axis)
+        outputs = maxmin_extension.forward(input, axis)
         return outputs
 
     @staticmethod

@@ -3,23 +3,22 @@ import math
 import time
 
 import torch
-import maxmin_cuda
+import maxmin
 
 TIME_SCALES = {'s': 1, 'ms': 1000, 'us': 1000000}
 
 parser = argparse.ArgumentParser()
 parser.add_argument('example', choices=['py', 'cuda'])
-parser.add_argument('-l', '--length', type=int, default=1000000)
+parser.add_argument('-l', '--length', type=int, default=10000)
 parser.add_argument('-r', '--runs', type=int, default=100)
 parser.add_argument('--scale', choices=['s', 'ms', 'us'], default='us')
 parser.add_argument('-c', '--cuda', action='store_true')
 options = parser.parse_args()
 
 if options.example == 'py':
-    from src.maxmin_py import MaxMin
+    from maxmin.maxmin_py import MaxMin
 elif options.example == 'cuda':
-    from src.maxmin_cuda import MaxMin
-    options.cuda = True
+    from maxmin.maxmin_cuda import MaxMin
 
 X = torch.randn((10, options.length // 10), requires_grad=True)
 
