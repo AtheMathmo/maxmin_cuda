@@ -26,10 +26,10 @@ Some quick benchmarking, applying MaxMin to a random matrix of size (50000,5000)
 
 | Method        | CUDA?           | Fwd Avg Time (us)  | Bckwd Avg Time (us)  |
 | ------------- |:-------------:| -----:|-----:|
-| Default Pytorch | - [ ] | 365 | 286 |
-| Default Pytorch | - [x] |   93  | 320 |
-| This Repo       | - [ ] |  1004 | 1057 |
-| This Repo       | - [x] |    37 | 247 |
+| Default Pytorch | [ ] | 365 | 286 |
+| Default Pytorch | [x] |   93  | 320 |
+| This Repo       | [ ] |  1004 | 1057 |
+| This Repo       | [x] |    37 | 247 |
 
 In short, the implementation in this repo is moderately faster than the GPU implementation using default pytorch ops. However, the CPU implementation is slower than the default method (so if you need a good CPU implementation then use that one). It is also worth noting that the default implementation is still plenty fast for most practical purposes.
 
