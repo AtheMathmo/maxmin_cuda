@@ -20,7 +20,7 @@ void maxmin_swap(
 }
 
 
-//TODO: This can be largely reused in the CUDA code too.
+//TODO: This can be reused in the CUDA code too.
 std::vector<int> maxmin_cpu_process(
     at::Tensor input,
     int32_t axis) {
@@ -29,7 +29,7 @@ std::vector<int> maxmin_cpu_process(
   const int true_axis = (axis == -1) ? num_dims - 1 : axis;
 
   int outer_size = 1;
-  for (int i = 0; i < true_axis; ++i) {
+  for (int i = 0; i < true_axis; i++) {
     outer_size *= input.size(i);
   }
 

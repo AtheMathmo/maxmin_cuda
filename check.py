@@ -5,6 +5,7 @@ import time
 import unittest
 
 import torch
+from torch.autograd import grad
 from maxmin.maxmin_cuda import MaxMin as CudaMaxMin
 from maxmin.maxmin_py import MaxMin as PyMaxMin
 
@@ -111,6 +112,46 @@ class TestMaxMin(unittest.TestCase):
         py_output = py_maxmin(a)
         cuda_output = cuda_maxmin(a)
         self.assertTrue((py_output.cpu().numpy() == cuda_output.cpu().numpy()).all())
+    
+    def test_py_vs_cuda_grad_axis_0(self):
+        a = torch.randn((40, 50, 800), requires_grad=True).cuda()
+        py_maxmin = PyMaxMin(0)
+        cuda_maxmin = CudaMaxMin(0)
+
+        py_output = py_maxmin(a)
+        py_o = (py_output - a).abs().sum()
+        py_grad = grad(py_o, a)[0]
+        cuda_output = cuda_maxmin(a)
+        cuda_o = (cuda_output - a).abs().sum()
+        cuda_grad = grad(cuda_o, a)[0]
+        self.assertTrue((py_grad.cpu().numpy() == cuda_grad.cpu().numpy()).all())
+    
+    def test_py_vs_cuda_grad_axis_1(self):
+        a = torch.randn((40, 50, 800), requires_grad=True).cuda()
+        py_maxmin = PyMaxMin(1)
+        cuda_maxmin = CudaMaxMin(1)
+
+        py_output = py_maxmin(a)
+        py_o = (py_output - a).abs().sum()
+        py_grad = grad(py_o, a)[0]
+        cuda_output = cuda_maxmin(a)
+        cuda_o = (cuda_output - a).abs().sum()
+        cuda_grad = grad(cuda_o, a)[0]
+        self.assertTrue((py_grad.cpu().numpy() == cuda_grad.cpu().numpy()).all())
+    
+    def test_py_vs_cuda_grad(self):
+        a = torch.randn((40, 50, 800), requires_grad=True).cuda()
+        py_maxmin = PyMaxMin()
+        cuda_maxmin = CudaMaxMin()
+
+        py_output = py_maxmin(a)
+        py_o = (py_output - a).abs().sum()
+        py_grad = grad(py_o, a)[0]
+        cuda_output = cuda_maxmin(a)
+        cuda_o = (cuda_output - a).abs().sum()
+        cuda_grad = grad(cuda_o, a)[0]
+        self.assertTrue((py_grad.cpu().numpy() == cuda_grad.cpu().numpy()).all())
+
 
 if __name__ == '__main__':
     unittest.main()

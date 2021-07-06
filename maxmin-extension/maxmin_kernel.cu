@@ -120,7 +120,7 @@ at::Tensor maxmin_cuda_backward(
 
   auto output_grad = at::zeros_like(grad);
 
-  AT_DISPATCH_ALL_TYPES(input.type(), "maxmin_forward_cuda", ([&] {
+  AT_DISPATCH_ALL_TYPES(input.type(), "maxmin_backward_cuda", ([&] {
     maxmin_cuda_backward_kernel<scalar_t><<<grid, block>>>(
         input.data<scalar_t>(),
         grad.data<scalar_t>(),
